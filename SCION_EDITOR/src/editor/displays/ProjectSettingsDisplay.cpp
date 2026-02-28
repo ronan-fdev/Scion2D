@@ -110,16 +110,6 @@ void ProjectSettingsDisplay::DrawSettingsPanel( const SettingCategory& category,
 	}
 }
 
-auto vector_getter = []( void* vec, int idx, const char** out_text ) {
-	auto& vector = *static_cast<std::vector<std::string>*>( vec );
-	if ( idx < 0 || idx >= static_cast<int>( vector.size() ) )
-	{
-		return false;
-	}
-	*out_text = vector[ idx ].c_str();
-	return true;
-};
-
 void ProjectSettingsDisplay::CreateProjectSettings()
 {
 	auto& coreGlobals = CORE_GLOBALS();
@@ -336,12 +326,17 @@ ProjectSettingsDisplay::SettingCategory ProjectSettingsDisplay::CreatePhysicsSet
 					static float gravity{ coreGlobals.GetGravity() };
 					static int currentIndex{ 0 };
 					auto filters = GetFilterStrings();
+
+					std::vector<const char*> filterCStrs{};
+					filterCStrs.reserve( filters.size() );
+					for ( const auto& filter : filters )
+						filterCStrs.push_back( filter.c_str() );
+
 					ImGui::InlineLabel( "Collision Categories" );
 					if ( ImGui::ListBox( "##collisionCategories",
-										&currentIndex,
-										vector_getter,
-										static_cast<void*>( &filters ),
-										static_cast<int>( filters.size() ) ) )
+										 &currentIndex,
+										 filterCStrs.data(),
+										 static_cast<int>( filterCStrs.size() ) ) )
 					{
 					}
 				}

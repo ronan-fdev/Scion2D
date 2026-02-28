@@ -13,6 +13,7 @@
 
 #include "ScionFilesystem/Serializers/JSONSerializer.h"
 #include "ScionFilesystem/Serializers/LuaSerializer.h"
+#include "ScionFilesystem/Utilities/FilesystemUtilities.h"
 
 #include <Rendering/Essentials/Shader.h>
 #include <Rendering/Essentials/Texture.h>
@@ -139,7 +140,8 @@ bool ProjectLoader::LoadProject( const std::string& sFilepath )
 	}
 
 	// Get Content Path
-	fs::path filePath{ sFilepath };
+	fs::path filePath{ Scion::Filesystem::NormalizePath( sFilepath ) };
+
 	fs::path projectPath{ filePath.parent_path() };
 	pProjectInfo->SetProjectPath( projectPath );
 

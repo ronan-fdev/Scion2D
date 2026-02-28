@@ -7,6 +7,7 @@
 
 #include "ScionFilesystem/Serializers/LuaSerializer.h"
 #include "ScionFilesystem/Utilities/DirectoryWatcher.h"
+#include "ScionFilesystem/Utilities/FilesystemUtilities.h"
 
 #include "editor/utilities/fonts/IconsFontAwesome5.h"
 #include "editor/utilities/EditorState.h"
@@ -245,7 +246,7 @@ void ScriptDisplay::GenerateScriptList()
 			std::string sPath{ m_sScriptsDirectory.substr( 0, m_sScriptsDirectory.find( "scripts" ) ) };
 			for ( const auto& [ _, script ] : *scriptList )
 			{
-				std::string newScript{ script.as<std::string>() };
+				std::string newScript{ Scion::Filesystem::NormalizePath(script.as<std::string>() ) };
 				if ( fs::exists( fs::path{ sPath + newScript } ) )
 				{
 					m_ScriptList.push_back( newScript );
